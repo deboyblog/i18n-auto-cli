@@ -1,8 +1,9 @@
 const axios = require('axios');
+const qs = require('qs');
 /**
  * 使用 https://brushes8.com/zhong-wen-jian-ti-fan-ti-zhuan-huan 网站的接口翻译
  * API： https://brushes8.com/zhong-wen-jian-ti-fan-ti-zhuan-huan
- * params: {
+ * data: {
  *     data: 哈哈哈
        variant: zh-tw
        dochineseconversion: 1
@@ -14,12 +15,16 @@ module.exports = async function (content, target) {
     const createParams = (content, lang = 'zh-tw') => {
         return {
             url: 'https://brushes8.com/zhong-wen-jian-ti-fan-ti-zhuan-huan',
-            type: 'GET',
-            params: {
+            method: 'POST',
+            data: qs.stringify({
                 data: content,
                 variant: lang.toLowerCase(),
-                dochineseconversion: 1
-            }
+                dochineseconversion: 1,
+                submit: '开始转换 (Ctrl + Enter)'
+            }),
+            headers: { 
+                'content-type': 'application/x-www-form-urlencoded'
+             }
         }
     };
     const {data} = await axios(createParams(content, target));

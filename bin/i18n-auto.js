@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const program = require('commander');
 const simplified2traditional = require('../src/simplified2traditional');
+const sync = require('../src/sync');
 program
     .version(require('../package.json').version)
     .description('自动将目标文件夹中文件的中文转换成置顶的繁体中文')
@@ -10,9 +11,9 @@ program
     .option('-l, --lang', 'target language [zh-TW, zh-HK, en-US]', 'zh-TW', /^(zh-TW|zh-TW|en-US)$/i)
     .action(function () {
         if (program.sync) {
-            console.error('not support now!');
-            return;
+            sync(program.target, program.dist);
+        } else {
+            simplified2traditional(program.target, program.dist, program.lang, program.sync);
         }
-        simplified2traditional(program.target, program.dist, program.lang, program.sync);
     });
 program.parse(process.argv);

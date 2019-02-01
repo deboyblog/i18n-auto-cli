@@ -1,5 +1,5 @@
 const simplified2traditional = require('./apis/simplified2traditional');
-const fileDisplay = require('./utils/fileDisplay');
+const listFile = require('./utils/list-file');
 const path = require("path");
 const fs = require("fs");
 const chalk = require('chalk');
@@ -20,17 +20,19 @@ module.exports = function (target, dist, lang = 'zh-TW') {
         log(chalk.red(`The lang option is reqired! use -l you target language to tell me what's the language you want. support: zh-TW zh-HK`))
         return;
     }
-    target = path.resolve(__dirname, target);
-    dist = path.resolve(__dirname, dist);
+    target = path.resolve(process.cwd(), target);
+    dist = path.resolve(process.cwd(), dist);
     log(chalk.green(`
 Target: ${target}
 Dist: ${dist}
 Lang: ${lang}
 `));
     log(chalk.green('Start to translate...'));
-    fileDisplay(target, (file) => {
+    listFile(target, (file) => {
+        // readFileSync got Buffer
         const fileContent = fs.readFileSync(file).toString();
         simplified2traditional(fileContent, lang).then(rst => {
+            // output the translate result to file
             const err = fs.writeFileSync(file.replace(target, dist), rst);
             if (!err) {
                 log(chalk.green(`File: ${file} translate complete.`))

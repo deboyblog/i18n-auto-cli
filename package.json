@@ -4,8 +4,9 @@
   "description": "Translate simplified Chinese to traditional Chinese (HK TW)",
   "main": "src/index.js",
   "scripts": {
-    "test:dir": "node ./bin/i18n-auto -t ../target -d ../dist -l zh-TW",
-    "test:file": "node ./bin/i18n-auto -t ../target/zh_cn.json -d ../dist/zh_tw.json -l zh-TW"
+    "test:dir": "node ./bin/i18n-auto -t ./target -d ./dist -l zh-TW",
+    "test:file": "node ./bin/i18n-auto -t ./target/zh_cn.json -d ./dist/zh_tw.json -l zh-TW",
+    "test:sync": "node ./bin/i18n-auto -s -t ./target/zh_cn.json -d ./dist/zh_tw.json -l zh-TW"
   },
   "bin": {
     "i18n-auto": "./bin/i18n-auto.js"

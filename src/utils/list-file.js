@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 /**
- * 文件遍历方法
+ * 遍历文件并将得到的路径传入回调函数中进一步处理
  * @param filePath 需要遍历的文件路径
  * @param fileCallback 返回遍历出来的文件列表
  */

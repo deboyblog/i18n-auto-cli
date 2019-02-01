@@ -1,0 +1,33 @@
+{
+  "name": "i18n-auto-cli",
+  "version": "0.0.1",
+  "description": "auto translate zh-CN to zh-TW or zh-HK",
+  "main": "src/index.js",
+  "scripts": {
+    "test:dir": "node ./bin/i18n-auto -t ../target -d ../dist -l zh-TW",
+    "test:file": "node ./bin/i18n-auto -t ../target/zh_cn.json -d ../dist/zh_tw.json -l zh-TW"
+  },
+  "bin": {
+    "i18n-auto": "./bin/i18n-auto.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deboyblog/i18n-auto.git"
+  },
+  "keywords": [
+    "auto-tanslate-tool"
+  ],
+  "author": "Deboy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deboyblog/i18n-auto/issues"
+  },
+  "homepage": "https://github.com/deboyblog/i18n-auto#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "chalk": "^2.4.2",
+    "commander": "^2.19.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}

@@ -19,8 +19,7 @@ module.exports = async function (content, target) {
             data: qs.stringify({
                 data: content,
                 variant: lang.toLowerCase(),
-                dochineseconversion: 1,
-                submit: '开始转换 (Ctrl + Enter)'
+                dochineseconversion: 1
             }),
             headers: { 
                 'content-type': 'application/x-www-form-urlencoded'

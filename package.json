@@ -1,7 +1,7 @@
 {
   "name": "i18n-auto-cli",
   "version": "0.0.1",
-  "description": "auto translate zh-CN to zh-TW or zh-HK",
+  "description": "Translate simplified Chinese to traditional Chinese (HK TW)",
   "main": "src/index.js",
   "scripts": {
     "test:dir": "node ./bin/i18n-auto -t ../target -d ../dist -l zh-TW",

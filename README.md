@@ -1,6 +1,6 @@
 # i18n-auto-cli
 
-Automatically convert Chinese into English (HK TW)
+Translate simplified Chinese to traditional Chinese (HK TW)
 
 > Thanks to    
 

@@ -3,7 +3,7 @@
 Translate simplified Chinese to traditional Chinese (HK TW) and English(on work)
 In order to project automatically internationalization;
 
-> Thanks to    
+> Thanks to
 
 [在线“智能”中文简体繁体正体转换工具](https://brushes8.com/zhong-wen-jian-ti-fan-ti-zhuan-huan)
 [创智俱乐部](https://sxisa.com)

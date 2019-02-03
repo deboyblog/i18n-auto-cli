@@ -21,6 +21,17 @@ yarn global add i18n-auto-cli
 ```
 
 ## Usage
+> version
+
+```$xslt
+i18n-auto -V
+```
+
+> help
+
+```$xslt
+i18n-auto -h
+```
 
 > simplified2traditional
 
@@ -28,10 +39,10 @@ yarn global add i18n-auto-cli
 i18n-auto -t you-path-to-untranlsate-dir-or-file -d you-path-to-outdir-or-file -l you-target-language[zh-HK|zh-TW]
 ```
 
-> Sync the key
+> Sync the key (-i option support to ignore the entry file)
 
 ```$xslt
-i18n-auto -s -t you-path-or-dir -d you-path-or-dir;
+i18n-auto -s -t you-path-or-dir -d you-path-or-dir -i index.js;
 ```
 
 ## Demo

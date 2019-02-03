@@ -29,8 +29,8 @@ const fileContent2Obj = function (filename, fileContent) {
         if (/module\.exports/.test(fileContent)) {
             obj = requireFromString(fileContent);
         } else if (/export default/.test(fileContent)) {
-            // console.log(fileContent);
-            obj = eval('(' + fileContent.replace(/export default/, '').replace(';', '') + ')');
+            console.log(fileContent);
+            obj = eval('(' + fileContent.replace(/export default/, '').replace(/};/, '}') + ')');
         }
     }
     return obj;

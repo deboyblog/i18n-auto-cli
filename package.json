@@ -1,6 +1,6 @@
 {
   "name": "i18n-auto-cli",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Translate simplified Chinese to traditional Chinese (HK TW)",
   "main": "src/index.js",
   "scripts": {

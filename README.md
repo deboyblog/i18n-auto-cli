@@ -22,8 +22,16 @@ yarn global add i18n-auto-cli
 
 ## Usage
 
+> simplified2traditional
+
 ```$xslt
 i18n-auto -t you-path-to-untranlsate-dir-or-file -d you-path-to-outdir-or-file -l you-target-language[zh-HK|zh-TW]
+```
+
+> Sync the key
+
+```$xslt
+i18n-auto -s -t you-path-or-dir -d you-path-or-dir;
 ```
 
 ## Demo
@@ -52,7 +60,7 @@ i18n-auto -t ./zh-CN -d ./zh-TW -l zh-TW
 
 ## Roadmap
 
-- [] Matching different in Chinese and English and synchronous the corresponding key;
+- [x] Matching different in Chinese and English and synchronous the corresponding key;
 - [] zh-CN to en-US;
 
 **PR welcome.**

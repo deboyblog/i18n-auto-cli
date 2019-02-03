@@ -48,8 +48,8 @@ const restoreFileFormat = function (filename, sourceFileContent, fileContent) {
     return content;
 }
 const syncFile = function (filename, content) {
-    console.log(`File not exist: ${filename} Sync complete.`)
     fs.writeFileSync(filename, content);
+    log(chalk.green(`Dist file not exist, ${filename} create successful.`));
 };
 /**
  * get diff of obj keys
@@ -116,7 +116,7 @@ const delValByPath = function (obj, path) {
  * sync the key
  * replace the file content
  */
-module.exports = function (target, dist) {
+module.exports = function (target, dist, ignore) {
     // [{name: '', content: ''}]
     const tasks = [];
     if (!target || typeof target !== 'string') {
@@ -136,6 +136,10 @@ Dist: ${dist}
 `));
     log(chalk.green('Start to sync...'));
     listFile(target, (file) => {
+        if (ignore && new RegExp(ignore).test(file)) {
+            log(chalk.yellow(`File: ${file} was ignore.`))
+            return;
+        }
         // get dist file path
         const distFile = file.replace(target, dist);
         // readFileSync default got Buffer
@@ -159,16 +163,15 @@ Dist: ${dist}
                     });
                     const distFileContent = restoreFileFormat(distFile, dFileContent, dObj);
                     fs.writeFileSync(distFile, distFileContent)
-                    log(chalk(`File: ${file} Synchronization is complete!`));
+                    log(chalk.green(`File: ${file} Synchronization is complete!`));
                 } else {
-                    log(chalk(`Keys of File: ${file}  is same as ${distFile} don't to sync!`))
+                    log(chalk.yellow(`Keys of File: ${file} is same as ${distFile} don't need to be sync!`))
                 }
             } else {
                 syncFile(distFile, fileContent)
             }
         } catch (err) {
             log(chalk.red(err));
-            // syncFile(distFile, fileContent)
         }
     });
 };

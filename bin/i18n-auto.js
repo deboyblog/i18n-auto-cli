@@ -9,9 +9,10 @@ program
     .option('-t, --target <path>', 'target dir')
     .option('-d, --dist <path>', 'output dir')
     .option('-l, --lang', 'target language [zh-TW, zh-HK, en-US]', 'zh-TW', /^(zh-TW|zh-TW|en-US)$/i)
+    .option('-i, --ignore [value]', 'take effect only in synchronous mode, you can pass the regular expressions or file name')
     .action(function () {
         if (program.sync) {
-            sync(program.target, program.dist);
+            sync(program.target, program.dist, program.ignore);
         } else {
             simplified2traditional(program.target, program.dist, program.lang, program.sync);
         }

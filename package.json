@@ -6,7 +6,7 @@
   "scripts": {
     "test:dir": "node ./bin/i18n-auto -t ./target -d ./dist -l zh-TW",
     "test:file": "node ./bin/i18n-auto -t ./target/zh_cn.json -d ./dist/zh_tw.json -l zh-TW",
-    "test:sync": "node ./bin/i18n-auto -s -t ./target/zh_cn.json -d ./dist/zh_tw.json -l zh-TW",
+    "test:sync": "node ./bin/i18n-auto -s -t ./target/zh_cn.js -d ./dist/en-US.js",
     "test:sync:dir": "node ./bin/i18n-auto -s -t ./target/ -d ./dist/"
   },
   "bin": {

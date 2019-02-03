@@ -4,10 +4,110 @@ const chalk = require('chalk');
 var requireFromString = require('require-from-string');
 const listFile = require('./utils/list-file');
 const log = console.log;
-let mode = 'dir'; // directory file
-const isJSONFile = function(filename) {
+const isJSONFile = function (filename) {
     const names = filename.split('.')
     return names[names.length - 1].toLowerCase() === 'json';
+};
+const getDeepKeys = function (obj) {
+    var keys = [];
+    for (var key in obj) {
+        keys.push(key);
+        if (typeof obj[key] === "object") {
+            var subkeys = getDeepKeys(obj[key]);
+            keys = keys.concat(subkeys.map(function (subkey) {
+                return key + "." + subkey;
+            }));
+        }
+    }
+    return keys;
+};
+const fileContent2Obj = function (filename, fileContent) {
+    let obj = null;
+    if (isJSONFile(filename)) {
+        obj = JSON.parse(fileContent);
+    } else {
+        if (/module\.exports/.test(fileContent)) {
+            obj = requireFromString(fileContent);
+        } else if (/export default/.test(fileContent)) {
+            // console.log(fileContent);
+            obj = eval('(' + fileContent.replace(/export default/, '').replace(';', '') + ')');
+        }
+    }
+    return obj;
+};
+const restoreFileFormat = function (filename, sourceFileContent, fileContent) {
+    let content = JSON.stringify(fileContent, null, 4);
+    if (!isJSONFile(filename)) {
+        if (/module\.exports/.test(sourceFileContent)) {
+            content = 'module.exports = ' + content;
+        } else if (/export default/.test(sourceFileContent)) {
+            // console.log(fileContent);
+            content = 'export default ' + content + ';';
+        }
+    }
+    return content;
+}
+const syncFile = function (filename, content) {
+    console.log(`File not exist: ${filename} Sync complete.`)
+    fs.writeFileSync(filename, content);
+};
+/**
+ * get diff of obj keys
+ * @param {*} sourceObj 
+ * @param {*} targetObj 
+ * return {del: [], add: []};
+ */
+const getDiffKeys = function (sourceObj, targetObj) {
+    // each the key and sync the diff form target lang
+    const sourceKeys = getDeepKeys(sourceObj);
+    const targetKeys = getDeepKeys(targetObj);
+    const addKeys = [];
+    const delKeys = [];
+    // get the add keys
+    sourceKeys.forEach(function (key) {
+        if (!targetKeys.includes(key)) {
+            addKeys.push(key)
+        }
+    });
+    targetKeys.forEach(function (key) {
+        if (!sourceKeys.includes(key)) {
+            delKeys.push(key);
+        }
+    });
+    return {
+        del: delKeys,
+        add: addKeys
+    };
+};
+const getPaths = function (path) {
+    return path.split('.').map(p => `['${p}']`).join('');
+}
+/**
+ * return the value through search path of the object
+ * @param {*} obj 
+ * @param {*} path 
+ */
+const getValByPath = function (obj, path) {
+    const paths = path.split('.')
+    let current = obj;
+    for (let i = 0; i < paths.length; ++i) {
+        if (current[paths[i]] === undefined) {
+            return undefined;
+        } else {
+            current = current[paths[i]];
+        }
+    }
+    return current;
+}
+const setValByPath = function (obj, path, value) {
+    const paths = getPaths(path);
+    eval('(obj' + paths + ') = value');
+    return obj;
+}
+const delValByPath = function (obj, path) {
+    const paths = getPaths(path);
+    eval('(delete obj' + paths + ')');
+    return obj;
 }
 /**
  * Matching different in Chinese and English and synchronous the corresponding key
@@ -36,21 +136,39 @@ Dist: ${dist}
 `));
     log(chalk.green('Start to sync...'));
     listFile(target, (file) => {
+        // get dist file path
+        const distFile = file.replace(target, dist);
         // readFileSync default got Buffer
         const fileContent = fs.readFileSync(file).toString();
         // to object
-        let tObj = {};
-        if (isJSONFile(file)) {
-            tObj = JSON.parse(fileContent);
-        } else {
-            if (/module\.export/.test(fileContent)) {
-                tObj = requireFromString(fileContent);
-            } else if (/export default/.test(fileContent)) {
-                // console.log(fileContent);
-                tObj = eval('(' + fileContent.replace(/export default/, '').replace(';', '') + ')');
+        let tObj = fileContent2Obj(file, fileContent);
+        try {
+            if (fs.existsSync(distFile)) {
+                const dFileContent = fs.readFileSync(distFile).toString();
+                let dObj = fileContent2Obj(distFile, dFileContent);
+                // compare the diffrent key and fill or delete the key according to target version (tObj)
+                const diffKeys = getDiffKeys(tObj, dObj) || [];
+                if (diffKeys.add.length || diffKeys.del.length) {
+                    diffKeys.add.forEach(key => {
+                        const val = getValByPath(tObj, key);
+                        setValByPath(dObj, key, val);
+                    });
+                    diffKeys.del.forEach(key => {
+                        const val = getValByPath(tObj, key);
+                        delValByPath(dObj, key, val);
+                    });
+                    const distFileContent = restoreFileFormat(distFile, dFileContent, dObj);
+                    fs.writeFileSync(distFile, distFileContent)
+                    log(chalk(`File: ${file} Synchronization is complete!`));
+                } else {
+                    log(chalk(`Keys of File: ${file}  is same as ${distFile} don't to sync!`))
+                }
+            } else {
+                syncFile(distFile, fileContent)
             }
+        } catch (err) {
+            log(chalk.red(err));
+            // syncFile(distFile, fileContent)
         }
-        // each the key and sync the diff form target lang
-        // TODO
     });
 };

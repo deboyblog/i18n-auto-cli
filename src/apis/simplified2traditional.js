@@ -1,5 +1,6 @@
 const axios = require('axios');
 const qs = require('qs');
+const unescapeJs =  require('unescape-js');
 /**
  * 使用 https://brushes8.com/zhong-wen-jian-ti-fan-ti-zhuan-huan 网站的接口翻译
  * API： https://brushes8.com/zhong-wen-jian-ti-fan-ti-zhuan-huan
@@ -29,5 +30,5 @@ module.exports = async function (content, target) {
     const {data} = await axios(createParams(content, target));
     const matchResult = data.match(matchReg);
     const translateResult = (matchResult && matchResult.length > 1) ? matchResult[1] : '';
-    return translateResult && translateResult.replace(/\\/g, '');
+    return unescapeJs(translateResult);
 };
